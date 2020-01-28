@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arweave Bulk Sender</title>
+   <script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+</head>
+<style>
+
+
+
+body{
+	background-color:white;
+	font-family: Lucida Console;
+	padding:10px;
+}
+
+.bagian{
+	display:block;
+}
+
+.bagian-1{
+	display:block;
+}
+
+.bagian-2{
+	display:none;
+}
+
+.bagian-3{
+	display:none;
+}
+
+.bagian-4{
+	display:none;
+}
+
+.title{
+	width:200px;
+	font-size:36px;
+	padding: 10px;
+	border: solid 2px black;
+	border-radius: 10px;
+	color:black;
+	margin-bottom:10px;
+}
+
+.sub-title{
+	width:300px;
+	font-size:16px;
+	padding: 10px;
+	border: solid 2px black;
+	border-radius: 10px;
+	color:black;
+}
+
+.uploadfile{
+	background-color:white;
+	font-size:16px;
+	padding: 50px 80px;
+	border: dashed 2px black;
+	border-radius: 10px;
+	color:black;
+	font-family: Lucida Console;
+	
+}
+
+.getfree{
+	width:160px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 2px black;
+	border-radius: 10px;
+	color:black;
+}
+
+.area{
+	width:800px;
+	height:280px;
+	background-color:white;
+	font-size:16px;
+	padding: 10px;
+	border: dashed 2px black;
+	border-radius: 20px;
+	color:black;
+	font-family: Lucida Console;
+	
+}
+
+.alert-danger{
+	margin-top:5px;
+	width:500px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 2px red;
+	border-radius: 10px;
+	color:red;
+	display:none;
+}
+
+
+.buttonproses{
+	background-color:white;
+	margin-top:10px;
+	width:300px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 3px black;
+	border-radius: 10px;
+	color:black;
+	font-family: Lucida Console;
+}
+
+.buttonproses:hover {
+	border: solid 3px blue;
+	color:blue;
+	
+}
+
+.listx{
+	margin-top:5px;
+	max-width:800px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 2px black;
+	border-radius: 10px;
+	color:black;
+}
+
+.totalfee{
+	margin-top:15px;
+	max-width:400px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 2px blue;
+	border-radius: 10px;
+	color:blue;
+}
+
+.buttonback{
+	background-color:white;
+	margin-top:10px;
+	width:100px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 3px #ee0000;
+	border-radius: 10px;
+	color:#ee0000;
+	font-family: Lucida Console;
+}
+
+.buttonback:hover{
+	background-color:#fffa98;
+	
+}
+
+.buttonsend{
+	background-color:white;
+	margin-top:20px;
+	width:100px;
+	font-size:14px;
+	padding: 8px;
+	border: solid 3px green;
+	border-radius: 10px;
+	color:green;
+	font-family: Lucida Console;
+}
+
+.buttonsend:hover{
+	background-color:#fffa98;
+	
+}
+
+
+</style>
+<body>
+
+<br /><br /><br /><br /><br />
+
+<div class="bagian" id="bagian">
+<center><div class="title">ARWEAVE</div></center>
+<center><div class="sub-title">Send AR Token by Bulk Sender</div></center>
+<br /><br /><br />
+</div>
+
+
+
+
+<div class="bagian-1" id="bagian-1">
+<input type="file" accept=".JSON,.json" id="uploadwallet" onsubmit="openwallet()" style="display: none;"/>
+<center><input type="button" class="uploadfile" id="file" name="uploadDompet" value="Click To Import Wallet" onclick="popupupload()"></center>
+<br /><br /><br /><br /><br />
+<center><a href="https://tokens.arweave.org/" class="getfree">Get Free Token</a></center>
+</div>
+
+
+<div class="bagian-2" id="bagian-2">
+<center><strong><div style="font-size:22px" id="balance"></div></strong></center><br />
+<center><div><strong>Format: Received Address=Amount AR</strong>, Example:<br />XepqBRwnq8SNfple3WHh0VWo06P8KQ0hVlNOjOgrJ5w=10<br />tO710xPXwCGwTPGKtOkEq3PMbWqXs9jOGiL8TCpDuw0=0.01</div></center><br />
+<center><div style="color:red;" >Do not send AR tokens with the same recipient address and amount. example:<br />XepqBRwnq8SNfple3WHh0VWo06P8KQ0hVlNOjOgrJ5w=10<br />XepqBRwnq8SNfple3WHh0VWo06P8KQ0hVlNOjOgrJ5w=10</div></center><br />
+<br />
+<center><div><textarea type="text" class="area" id="input" placeholder="Address Target=Amount" ></textarea></div></center><br />
+<center><div class="alert-danger" id="alert1">Please input address and amount !</div></center>
+<center><div class="alert-danger" id="alert2"> There is an invalid address or amount !</div></center>
+<center><div class="alert-danger" id="alert3"> Your balance is not sufficient !</div></center>
+<center><div><input type="button" class="buttonproses" name="send" value="CHECK BEFORE SEND" id="go"></div></center>
+
+</div>
+
+<div class="bagian-3" id="bagian-3">
+<center><strong><div style="margin-bottom:20px;margin-top:50px;">PLEASE CHECK BEFORE YOU SEND IT !</div></strong></center>
+
+<div id="list">
+</div>
+<center><div class="totalfee" id="totalfee"></div></center>
+<center><div style="color:red;margin-top:20px;display:none;" id="alert5"> Your balance is not sufficient !</div></center>
+<center><div><input type="button" class="buttonsend" name="send" value="SEND NOW" id="sender"></div></center>
+<center><div><input type="button" class="buttonback" name="back" value="BACK" onclick="back()"></div></center>
+
+</div>
+
+<div class="bagian-4" id="bagian-4">
+<center><div style="max-width:700px;margin-top:20px;margin-bottom:20px;">Your transaction was successful and has been sent to the Arweave blockchain network. Please wait a few minutes and check your transaction at the link below.</div></center>
+<div id="listhasil">
+</div>
+<center><div style="color:red;margin-top:30px;">Please save or copy paste Txid before closing this page!</div></center>
+</div>
+
+
+<center><div></div></center>
+
+<script>
+
+
+const arweave = Arweave.init({host:"arweave.net",port:443,logging:!0,protocol:"https"});
+var jwk;
+var wallet_address;
+var saldo;
+
+//Fungsi untuk memanggil wallet dari file JSON
+function openwallet() {
+                const input = document.querySelector('input[type="file"]');
+                if (input) {
+                    input.addEventListener('change', function () {
+                        const reader = new FileReader();
+                        reader.addEventListener('load', function(e) {
+                            jwk = e.target.result;
+                        });
+                        reader.onload = function() {
+                            console.log(jwk);
+                            jwk = JSON.parse(jwk);
+                            arweave.wallets.jwkToAddress(jwk).then((address) => {
+                                wallet_address = address;
+                                arweave.wallets.getBalance(wallet_address).then((balance) => {
+                                    try {
+                                        let wallet_balance = arweave.ar.winstonToAr(balance);
+										document.getElementById('bagian').style.display = 'none';
+										document.getElementById('bagian-1').style.display = 'none';
+                                        document.getElementById('bagian-2').style.display = 'block';
+									
+                                        var bb = arweave.ar.winstonToAr(balance);
+										saldo = arweave.ar.winstonToAr(balance);
+										document.getElementById("balance").innerText="YOUR BALANCE : "+bb+" AR";
+                                        
+                                    } catch(err) {
+                                        console.log(err);
+                                    }
+
+                                });
+                            });
+                        }
+                        reader.readAsText(input.files[0]);
+
+                    }, false);
+                }
+}
+
+function popupupload () {
+                console.log("Clicked!");
+                $("#uploadwallet").click();
+                openwallet();
+}
+
+
+document.getElementById("go").onclick = async function checkFee(){
+	
+	document.getElementById('alert1').style.display = 'none';
+	document.getElementById('alert2').style.display = 'none';
+	document.getElementById('alert3').style.display = 'none';
+	document.getElementById('bagian-3').style.display = 'none';
+	document.getElementById('bagian-2').style.display = 'none';
+	document.getElementById("sender").style.display = 'block';
+	document.getElementById("alert5").style.display = 'none';
+	
+	
+	var lines = $("#input")
+		.val()
+		.split(/\n/);
+	  var output = [];
+	  var outputText = [];
+	  for (var i = 0; i < lines.length; i++) {
+		// only push this line if it contains a non whitespace character.
+		if (/\S/.test(lines[i])) {
+		  outputText.push('"' + $.trim(lines[i]) + '"');
+		  output.push($.trim(lines[i]));
+		}
+	  }
+	  
+	  if(output.length == 0){
+		  document.getElementById('bagian-2').style.display = 'block';
+			document.getElementById('alert1').style.display = 'block';
+		}else{
+			
+				var stra = ''
+				var totalamm = [];
+				var jumlahamm = [];
+				var wallets = jwk;
+				
+				
+			//Perulangan hasil
+			output.forEach(async function(item){
+				
+				
+				var pisah = item.split('=');
+				var addr = pisah[0];
+				var amm = pisah[1];
+				
+				if(addr != null && amm != null){
+					var panjangAddr = addr.length;
+					var panjangAmm = amm.length;
+					
+					var regex = /^\d+(?:\.\d+)?$/;
+					var filter = regex.test(amm);
+				
+					document.getElementById("bagian-3").style.display = 'block';
+					
+					
+					if(!filter || panjangAddr != 43){
+							
+							//document.getElementById('alert2').style.display = 'block';
+							stra += '<center><div class="listx" style="color:red">Invalid Format : '+addr+'='+amm+'</div></center>';
+							document.getElementById("list").innerHTML = stra;
+							document.getElementById("sender").style.display = 'none';
+											
+						
+					}else{
+						
+						let bb = addr;
+						let response = await fetch('https://arweave.net/price/0/'+bb+'/');
+						let data = await response.text()
+						let wiston = (data / 1000000000000);
+
+						//Menghitung total fee
+						totalamm.push(wiston);
+						var  total = 0;
+						
+						for(i = 0; i <totalamm.length; i++){
+						   total += totalamm[i];
+						}
+						
+						//Menghitung total amount
+						jumlahamm.push(amm);
+						var  jumlah = 0;
+						
+						for(i = 0; i <jumlahamm.length; i++){
+						   jumlah += Number(jumlahamm[i]);
+						}
+
+						var ammfee = Number(total)+Number(jumlah);
+						
+						document.getElementById('bagian-3').style.display = 'block';
+						//document.getElementById('bagian-2').style.display = 'none';
+						
+						
+						stra += '<center><div class="listx">Amount : '+amm+' AR | To : '+addr+'</div></center>';
+						document.getElementById("list").innerHTML = stra;
+						document.getElementById("totalfee").innerText="Total (Amount + Fee) : "+ammfee+" AR";
+						
+						if(ammfee > saldo){
+							document.getElementById("sender").style.display = 'none';
+							document.getElementById("alert5").style.display = 'block';
+						}
+						
+						
+						
+					}
+						
+					
+				}else{
+					document.getElementById('alert2').style.display = 'block';
+					document.getElementById('bagian-2').style.display = 'block';
+				}				
+			  
+			});
+			
+		}
+	
+}
+
+document.getElementById("sender").onclick = async function Sending(){
+	
+	document.getElementById('bagian-4').style.display = 'block';
+	document.getElementById('bagian-3').style.display = 'none';
+	
+	var lines = $("#input")
+		.val()
+		.split(/\n/);
+	  var output = [];
+	  var outputText = [];
+	  for (var i = 0; i < lines.length; i++) {
+		// only push this line if it contains a non whitespace character.
+		if (/\S/.test(lines[i])) {
+		  outputText.push('"' + $.trim(lines[i]) + '"');
+		  output.push($.trim(lines[i]));
+		}
+	  }	 
+			var hasil = ''
+			var totalamm = [];
+			var jumlahamm = [];
+		//Perulangan hasil
+		output.forEach(async function(item){
+					
+			var pisah = item.split('=');
+			var addr = pisah[0];
+			var amm = pisah[1];
+			var wallet = jwk;
+			
+			try {
+				let transaction = await arweave.createTransaction({
+				target:addr,
+				quantity: arweave.ar.arToWinston(amm)
+				}, wallet);
+
+				await arweave.transactions.sign(transaction, wallet);
+				const response = await arweave.transactions.post(transaction);
+				
+				var txid = transaction.id;
+
+				hasil += '<center><div class="listx">TXID : <a href="https://viewblock.io/arweave/tx/'+txid+'">'+txid+'</a></div></center>';
+				document.getElementById("listhasil").innerHTML = hasil;
+				
+				
+			}catch(err){
+				hasil += '<center><div class="listx" style="color:red">Failed to send : '+addr+'='+amm+'</div></center>';
+				document.getElementById("listhasil").innerHTML = hasil;
+			}
+			
+		});
+	
+}
+
+//tombol kembali
+
+function back(){
+	document.getElementById('bagian-2').style.display = 'block';
+	document.getElementById('bagian-3').style.display = 'none';
+}
+
+
+
+</script>
+
+</body>
+</html>
